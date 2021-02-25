@@ -5,6 +5,7 @@ from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 
 def main():
+    print('scrape from scrape_mars.py')
     return scrape()
 
 def startSplinter(url):
@@ -31,26 +32,27 @@ def scrapeMarsHemispheres():
         hemisphere_image_urls.append({title: img_url})
         browser.back()
     browser.quit()
-    return hemisphere_image_urls
+    return {'mars_hemisphere_image_urls': hemisphere_image_urls}
 
 def scrapeMarsFacts():
     mars_facts_table = pd.read_html('https://space-facts.com/mars/')[0]
     mars_facts_table.iloc[:,0] = mars_facts_table.iloc[:,0].str.strip(':')
     mars_facts_table = mars_facts_table.rename(columns={0: 'Fact Topics', 1: 'Fact Value'})
     mars_facts_table_html = mars_facts_table.to_html().replace('\n', '')
-    return mars_facts_table_html
+    return {'mars_facts_table_html': mars_facts_table_html}
 
 def scrapedFeatureImage():
     browser = startSplinter('https://www.jpl.nasa.gov/images?query=mars')
     browser.find_by_css('.text-theme-red')[1].click() # finds and clicks the 'SORT BY' menu
     browser.find_by_tag('option')[2].click() # finds and clicks the 'LATEST' option
+    time.sleep(1) # allows page to load, lest will choose wrong image url
     browser.find_by_css('.SearchResultCard').first.click() # finds and clicks first/featured image
-    time.sleep(2) # allows page to load, lest error 
+    time.sleep(1) # allows page to load, lest error 
     featured_img_html = browser.html
     img_soup = BeautifulSoup(featured_img_html, 'lxml')
     featured_img_url = img_soup.find_all('img', class_='BaseImage object-scale-down')[0]['data-src']
     browser.quit()
-    return featured_img_url
+    return {'featured_image_url': featured_img_url}
 
 def scrapeNASAArticles():
     nasa_results = {'news_titles': [],
@@ -71,10 +73,11 @@ def scrapeNASAArticles():
 
 def scrape():
     nasa_article_results = scrapeNASAArticles()
-    featured_image_url = scrapedFeatureImage()
-    mars_facts_table = scrapeMarsFacts()
-    hemisphere_image_urls = scrapeMarsHemispheres()
-    return [nasa_article_results, featured_image_url, mars_facts_table, hemisphere_image_urls]
+    # featured_image_url = scrapedFeatureImage()
+    # mars_facts_table = scrapeMarsFacts()
+    # hemisphere_image_urls = scrapeMarsHemispheres()
+    # return [nasa_article_results, featured_image_url, mars_facts_table, hemisphere_image_urls]
+    return nasa_article_results
 
 if __name__ == '__main__':
 	main() 
