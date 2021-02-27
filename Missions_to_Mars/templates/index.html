@@ -6,25 +6,78 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge"> 
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-		<link rel="stylesheet" href="static/styles.css"/>
+		<link rel="stylesheet" href="../static/styles.css" type="text/css">
 	</head>
 
 	<body>
-		<div class="containter sub-body">
-			<h1 class="jumbotron text-center">Mars Mission Data Collection
-				<!-- links scrape route from app.py -->
-				<a class="btn btn-info" href="/scrape" role="button">See New Data!</a> 
-			</h1>
+		<div class="containter">
+			<div class="jumbotron">
+				<h1 class="display-4">Mars Mission Data Collection</h1>
+				<p class="lead">Using BeautifulSoup and Splinter, here are some of the most pertinent Mars information/ facts of today!</p>
+				<p class="lead">
+				  <a class="btn btn-primary btn-lg" href="/scrape" role="button">Get Newest Data!</a>
+				</p>
+			  </div>
 			<!-- place all data in nice places -->
 			<div class="row">
 				<div class="col-md-12">
+					<h2>Most Recent Article</h2>
+					<h4>{{ mars_data[0].news_titles[0] }}</h4>
+					<h5>{{ mars_data[0].p_text[0] }}</h5>
+					<br>
 					<!-- link to page? -->
-					<h1>{{mars_data}}</h1>
-
 				</div>
-				<!-- {% for d in data%}
-					<h3>{{d}}</h3>
-				{% endfor %} -->
+			</div>
+			<div class="row">
+				<div class="col-md-7">
+					<img src="{{ mars_data[1].featured_image_url }}" class="rounded" alt="featured image">
+				</div>
+				<div class="table col-md-5">
+					{{ mars_data[2].mars_facts_table_html | safe}}
+				</div>
+			</div>
+			<br>
+			<h2>Mars Hemisphere Images</h2>
+			<div class="row">
+				<div class="col-md-6">
+					<!-- <img src="{{ mars_data[3].mars_hemisphere_image_urls[0].Cerberus_Hemisphere }}" style="width: 500px; height: 500px; padding: 10px; margin: 10px;" class="rounded" alt="Cerberus Hemisphere">  -->
+					<div class="card" style="padding:10px; margin: 5px; width: 30rem;">
+						<img class="card-img-top" src="{{ mars_data[3].mars_hemisphere_image_urls[0].Cerberus_Hemisphere }}" alt="Card image cap">
+						<div class="card-body">
+						  <p class="card-text">Cerberus Hemisphere</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<!-- <img src="{{ mars_data[3].mars_hemisphere_image_urls[1].Schiaparelli_Hemisphere }}" style="padding:10px; margin: 5px; width: 500px; height: 500px; padding: 10px; margin: 10px;" class="rounded" alt="">  -->
+					<div class="card" style="padding:10px; margin: 5px; width: 30rem;">
+						<img class="card-img-top" src="{{ mars_data[3].mars_hemisphere_image_urls[1].Schiaparelli_Hemisphere }}" alt="Card image cap">
+						<div class="card-body">
+						  <p class="card-text">Schiaparelli Hemisphere</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<!-- <img src="{{ mars_data[3].mars_hemisphere_image_urls[2].Syrtis_Major_Hemisphere }}" style="padding:10px; margin: 5px; width: 500px; height: 500px; padding: 10px; margin: 10px;" class="rounded" alt="">  -->
+					<div class="card" style="padding:10px; margin: 5px; width: 30rem;">
+						<img class="card-img-top" src="{{ mars_data[3].mars_hemisphere_image_urls[2].Syrtis_Major_Hemisphere }}" alt="Card image cap">
+						<div class="card-body">
+						  <p class="card-text">Syrtis Major Hemisphere</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card" style="padding:10px; margin: 5px; width: 30rem;">
+						<img class="card-img-top" src="{{ mars_data[3].mars_hemisphere_image_urls[3].Valles_Marineris_Hemisphere }}" alt="Card image cap">
+						<div class="card-body">
+						  <p class="card-text">Valles Marineris Hemisphere</p>
+						</div>
+					</div>
+				</div>
+					<!-- <img src="{{ mars_data[3].mars_hemisphere_image_urls[3].Valles_Marineris_Hemisphere }}" style="width: 500px; height: 500px; padding: 10px; margin: 10px;" class="rounded" alt="">  -->
+				</div>
 			</div>
 		</div>
 	</body>

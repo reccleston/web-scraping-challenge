@@ -4,10 +4,6 @@ from bs4 import BeautifulSoup
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 
-def main():
-    print('scrape from scrape_mars.py')
-    return scrape()
-
 def startSplinter(url):
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
@@ -27,6 +23,8 @@ def scrapeMarsHemispheres():
         img_page_soup = BeautifulSoup(img_page_html, 'html')
         img = img_page_soup.find_all('img', class_='wide-image')[0]
         title = img_page_soup.find('h2', class_='title').text.strip(' Enhanced') + 'e'
+        title = '_'.join(title.split(' '))
+        print(title)
         img_url = 'https://astrogeology.usgs.gov' + img['src']
 
         hemisphere_image_urls.append({title: img_url})
@@ -43,14 +41,27 @@ def scrapeMarsFacts():
 
 def scrapedFeatureImage():
     browser = startSplinter('https://www.jpl.nasa.gov/images?query=mars')
+    # SPECIAL WEBSRIVER INIT FOR FEATURE IMAGE
+    # executable_path = {'executable_path': ChromeDriverManager().install()}
+    # # browser = Browser('chrome', **executable_path, headless=False)
+
+    # browser = webdriver.Chrome(**executable_path)
+    # browser.get('https://www.jpl.nasa.gov/images?query=mars')
+    # wait_sec = 3
+
     browser.find_by_css('.text-theme-red')[1].click() # finds and clicks the 'SORT BY' menu
     browser.find_by_tag('option')[2].click() # finds and clicks the 'LATEST' option
-    time.sleep(1) # allows page to load, lest will choose wrong image url
+    time.sleep(4) # allows page to load, lest will choose wrong image url
+    # sleep, try to find, if cant find, sleep again 
     browser.find_by_css('.SearchResultCard').first.click() # finds and clicks first/featured image
-    time.sleep(1) # allows page to load, lest error 
+    time.sleep(4) # allows page to load, lest error 
     featured_img_html = browser.html
     img_soup = BeautifulSoup(featured_img_html, 'lxml')
-    featured_img_url = img_soup.find_all('img', class_='BaseImage object-scale-down')[0]['data-src']
+    try:
+        featured_img_url = img_soup.find_all('img', class_='BaseImage object-scale-down')[0]['data-src']
+    except IndexError:
+        featured_img_url = img_soup.find_all('img', class_='BasåeImage object-scale-down')['data-src']
+
     browser.quit()
     return {'featured_image_url': featured_img_url}
 
@@ -73,11 +84,13 @@ def scrapeNASAArticles():
 
 def scrape():
     nasa_article_results = scrapeNASAArticles()
-    # featured_image_url = scrapedFeatureImage()
-    # mars_facts_table = scrapeMarsFacts()
-    # hemisphere_image_urls = scrapeMarsHemispheres()
-    # return [nasa_article_results, featured_image_url, mars_facts_table, hemisphere_image_urls]
-    return nasa_article_results
+    featured_image_url = scrapedFeatureImage()
+    mars_facts_table = scrapeMarsFacts()
+    hemisphere_image_urls = scrapeMarsHemispheres()
+    return {'mars_data': [nasa_article_results, featured_image_url, mars_facts_table, hemisphere_image_urls]}
 
-if __name__ == '__main__':
-	main() 
+# data = scrape()
+# # print(data)
+# print(type(data))
+# # print(data['mars_data'])
+# print(type(data['mars_data']))
