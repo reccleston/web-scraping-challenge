@@ -12,7 +12,6 @@ db.mars_mission.insert_many(scrape()['mars_data'])
 
 @app.route('/') 
 def index():
-    # make sure there is data for initial site load
     data = list(db.mars_mission.find())
     return render_template('index.html', mars_data=data)
 
@@ -21,9 +20,7 @@ def index():
 def marsScrape():
 
     print('scrape from app.py')
-    # mission_data = db.mars_mission
     mars_data = scrape()
-    # db.mars_mission.insert_many(mars_data)
     db.mars_mission.insert_many(mars_data['mars_data'])
 
     return redirect('/', code=302)
