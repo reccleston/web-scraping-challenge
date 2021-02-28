@@ -2,7 +2,6 @@ import pymongo
 from flask import Flask, jsonify, make_response, render_template, redirect
 from scrape_mars import scrape
 
-# this runs twice, how to stop?
 app = Flask(__name__)
 
 client = pymongo.MongoClient('mongodb://localhost:27017')
